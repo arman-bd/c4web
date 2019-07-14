@@ -72,14 +72,14 @@ int __start_server(ip_port in) {
     WORD versionRequested;
     WSADATA wsaData;
     int wsaError;
-    int bytesRecv = SOCKET_ERROR;
+    //int bytesRecv = SOCKET_ERROR;
     SOCKET MainSocket;
     SOCKET AcceptSocket;
 
     // File
-    FILE *fp;
-    char *file_type = malloc(128);
-    size_t file_size = 0;
+    //FILE *fp;
+    //char *file_type = malloc(128);
+    //size_t file_size = 0;
 
     // Print Application Name
     printf("::: %s v%s - %s :::\n\n", __ServerName, __ServerVersion, __ServerOS);
@@ -107,7 +107,7 @@ int __start_server(ip_port in) {
 
     // Check Socket Validity
     if(MainSocket == INVALID_SOCKET){
-        printf("Error: Socket Error - %ld\n", WSAGetLastError());
+        printf("Error: Socket Error - %d\n", WSAGetLastError());
         WSACleanup();
         return 0;
     }else{
@@ -123,7 +123,7 @@ int __start_server(ip_port in) {
 
     // Bind Socket
     if (bind(MainSocket, (SOCKADDR*)&service, sizeof(service)) == SOCKET_ERROR){
-        printf("Error: Binding Failed - %ld.\n", WSAGetLastError());
+        printf("Error: Binding Failed - %d.\n", WSAGetLastError());
         printf("       Check If Port Is Already In Use.\n");
         closesocket(MainSocket);
         return 0;
@@ -133,7 +133,7 @@ int __start_server(ip_port in) {
     }
 
     if(listen(MainSocket, 10) == SOCKET_ERROR){
-       printf("Error: Unable To Listen On Port [ %d ] - %ld.\n", port, WSAGetLastError());
+       printf("Error: Unable To Listen On Port [ %d ] - %d.\n", port, WSAGetLastError());
     }else{
        printf("Server: Listening On Port [ %d ]\n", port);
     }
@@ -175,19 +175,19 @@ DWORD WINAPI HandleRequest(void* data) {
 
     struct ThreadData *tData = (struct ThreadData *) data;
 
-    SOCKET AcceptSocket = tData->mysocket;//data.mysocket;
-    rqpack request_data;
-
     printf("\nThread ID: %d", tData->thread_id);
 
     // Receive Data From Client
     http_request this_request;
-    this_request = process_request(AcceptSocket);
+    this_request.socket = tData->mysocket;
+    process_request(&this_request);
+
+    //this_request = process_request(this_request.socket);
 
 
     if(this_request.status == -1){
         // Error!
-        closesocket(AcceptSocket); // Close Socket
+        closesocket(this_request.socket); // Close Socket
         return 0;
     }else{
         // Forward To Router
@@ -231,7 +231,7 @@ DWORD WINAPI HandleRequest(void* data) {
 
 
 
-    closesocket(AcceptSocket); // Close Connection
+    closesocket(this_request.socket); // Close Connection
 
     return 0;
 }

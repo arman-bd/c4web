@@ -11,9 +11,11 @@ typedef struct http_response {
     char *body;
 } http_response;
 
-int socket_send(SOCKET socket, char *content){
-    return send(socket, content, strlen(content), 0);
+int socket_send(http_request request, char *content){
+    return send(request.socket, content, strlen(content), 0);
 }
+
+
 
 http_response http_response_create(){
     http_response response;
@@ -56,7 +58,7 @@ void http_response_header(http_response response, char *data){
 
 
 
-int send_response_header(SOCKET socket, int response, char *c_type, long c_size){
+int send_response_header(http_request request, int response, char *c_type, long c_size){
     char header[4096];
 
     // Add Response Code
@@ -71,11 +73,11 @@ int send_response_header(SOCKET socket, int response, char *c_type, long c_size)
     // Process Header
     sprintf(header, "%sServer: %s/%s (%s)\n", header, __ServerName, __ServerVersion, __ServerOS);
     sprintf(header, "%sContent-Type: %s; charset=utf-8\n", header, c_type);
-    sprintf(header, "%sContent-Length: %ld\n", header, c_size);
+    //sprintf(header, "%sContent-Length: %ld\n", header, c_size);
     sprintf(header, "%s\n", header);
 
     // Send Header
-    return send(socket, header, strlen(header), 0);
+    return send(request.socket, header, strlen(header), 0);
 }
 
 

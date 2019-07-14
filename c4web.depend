@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1563137493 source:d:\github\c4web\main.c
+	<stdio.h>
+	"src/c4web.c"
+
+1563136923 d:\github\c4web\src\c4web.c
+	<io.h>
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<time.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<windows.h>
+	<winsock2.h>
+	"sds.c"
+	"function.c"
+	"request.c"
+	"response.c"
+	"router.c"
+
+1562896524 d:\github\c4web\src\sds.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<assert.h>
+	<limits.h>
+	<sys/types.h>
+	<stdarg.h>
+	<stdint.h>
+	<stdio.h>
+	"testhelp.h"
+	"limits.h"
+
+1563122108 d:\github\c4web\src\function.c
+
+1563137366 d:\github\c4web\src\request.c
+
+1563137593 d:\github\c4web\src\response.c
+
+1563136152 d:\github\c4web\src\router.c
+
