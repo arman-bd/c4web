@@ -1,3 +1,60 @@
+typedef struct http_headers {
+    char *key;
+    char *value;
+} http_headers;
+
+typedef struct http_response {
+    char *protocol;
+    char *status_code;
+    int header_size;
+    http_headers *headers;
+    char *body;
+} http_response;
+
+int socket_send(SOCKET socket, char *content){
+    return send(socket, content, strlen(content), 0);
+}
+
+http_response http_response_create(){
+    http_response response;
+    response.protocol = "HTTP/1.x";
+    response.status_code = "403 Forbidden";
+    response.header_size = 0;
+    return response;
+}
+
+void http_response_header(http_response response, char *data){
+    int n;
+    //response.headers = malloc(sizeof(response.headers)+1);
+    //response.headers[0].key = "Test";
+    //response.headers[0].value = "Data";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int send_response_header(SOCKET socket, int response, char *c_type, long c_size){
     char header[4096];
@@ -21,9 +78,7 @@ int send_response_header(SOCKET socket, int response, char *c_type, long c_size)
     return send(socket, header, strlen(header), 0);
 }
 
-int send_response_content(SOCKET socket, char *content){
-    return send(socket, content, strlen(content), 0);
-}
+
 /*
 int send_response_file(SOCKET socket, FILE *fp, size_t file_size, size_t max_buffer){
     int byteSent = SOCKET_ERROR;

@@ -10,7 +10,7 @@ GitHub: https://github.com/arman-bd/c4web
 */
 
 char __ServerName[128] = "Khudro";
-char __ServerVersion[16] = "0.1.1";
+char __ServerVersion[16] = "1.0.1";
 char __ServerOS[32] = "Win32";
 
 // Include Required Headers
@@ -46,13 +46,16 @@ typedef struct ThreadData {
     SOCKET mysocket;
 } ThreadData;
 
-DWORD WINAPI HandleRequest(void* data);
-
 // Include Required File
-#include "sds/sds.c"
+#include "sds.c"
 #include "function.c"
 #include "request.c"
 #include "response.c"
+#include "router.c"
+
+// Functions
+DWORD WINAPI HandleRequest(void* data);
+void router(http_request request);
 
 int __start_server(ip_port in) {
     // IP : Port
@@ -80,10 +83,6 @@ int __start_server(ip_port in) {
 
     // Print Application Name
     printf("::: %s v%s - %s :::\n\n", __ServerName, __ServerVersion, __ServerOS);
-
-    // Load Default Configuration
-    //s_conf server_conf;
-    //server_conf = parse_config("khudro.conf", 0);
 
     /* Start Socket Initialization */
     versionRequested = MAKEWORD(2, 2);
@@ -191,6 +190,11 @@ DWORD WINAPI HandleRequest(void* data) {
         closesocket(AcceptSocket); // Close Socket
         return 0;
     }else{
+        // Forward To Router
+        router(this_request);
+
+
+        /*
         char sample_response[1000];
         sprintf(sample_response, "%s : %s : %s : %s", this_request.request_method, this_request.file_path, this_request.query, this_request.requested_uri);
         send_response_header(AcceptSocket, 200, "text/html", strlen(sample_response)+10);
@@ -206,6 +210,9 @@ DWORD WINAPI HandleRequest(void* data) {
         send_response_content(AcceptSocket, "3\n");
         Sleep(1000);
         send_response_content(AcceptSocket, "4\n");
+        */
+
+
 
     }
 

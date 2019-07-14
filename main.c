@@ -7,3 +7,7 @@ int main(){
 
     return 0;
 }
+
+void router(http_request request){
+    router_match(request, "hello/world");
+}
