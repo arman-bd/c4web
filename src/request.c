@@ -3,20 +3,6 @@
 Adding SDS Library to Parse Headers
 */
 
-
-typedef struct rqpack {
-    // Request Parameter
-    char request_method[9];
-    int compressed;
-
-    // File Parameter
-    char *requested_uri;
-    char *file_name;
-    char *file_path;
-    char *query;
-    char *host;
-}rqpack;
-
 typedef struct http_request {
     // Request Parameter
     SOCKET socket;
@@ -29,7 +15,7 @@ typedef struct http_request {
     char file_name[1024];
     char file_path[2048];
     char query[4096];
-    char host[1024];
+    char host[256];
 } http_request;
 
 void process_request(http_request *http_req){

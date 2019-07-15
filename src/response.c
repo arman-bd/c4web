@@ -26,7 +26,7 @@ http_response http_response_create(){
 }
 
 void http_response_header(http_response response, char *data){
-    int n;
+    //int n;
     //response.headers = malloc(sizeof(response.headers)+1);
     //response.headers[0].key = "Test";
     //response.headers[0].value = "Data";
