@@ -6,6 +6,7 @@ typedef struct http_headers {
 typedef struct http_response {
     char *protocol;
     char *status_code;
+    int header_sent;
     int header_size;
     http_headers *headers;
     char *body;
@@ -15,25 +16,51 @@ int socket_send(http_request request, char *content){
     return send(request.socket, content, strlen(content), 0);
 }
 
-
-
 http_response http_response_create(){
     http_response response;
     response.protocol = "HTTP/1.x";
-    response.status_code = "403 Forbidden";
+    response.status_code = "200 OK";
     response.header_size = 0;
+    response.header_sent = 0;
     return response;
 }
 
-void http_response_header(http_response response, char *data){
-    //int n;
-    //response.headers = malloc(sizeof(response.headers)+1);
-    //response.headers[0].key = "Test";
-    //response.headers[0].value = "Data";
+void http_response_header(http_response *response, char *key, char *value){
+    int i = 0;
+    int j = response->header_size;
+
+    for(i = 0; i < j; i++){
+        if(strcmp(response->headers[i].key, key) == 0){
+            response->headers[i].value = value;
+            return;
+        }
+    }
+
+
+
+    http_headers *new_headers;
+    new_headers = (http_headers*) realloc(response->headers, (j + 1) * sizeof(response->headers));
+
+    new_headers[j].key = key;
+    new_headers[j].value = value;
+
+    printf("%d: %s => %s", response->header_size, new_headers[j].key, new_headers[j].value);
+
+
+    response->headers = new_headers;
+
+    //printf("%d: %s => %s", response.header_size, response.headers[1].key, response.headers[1].value);
+    free(new_headers);
+
 }
 
 
+int http_header_send(http_response response){
 
+
+
+    return 0;
+}
 
 
 

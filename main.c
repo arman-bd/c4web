@@ -4,7 +4,13 @@
 void web_hello_world(http_request request);
 
 int main(){
-    start_server(7071);
+
+    http_response response = http_response_create();
+    http_response_header(&response, "Hello", "World");
+
+    //printf("%d: %s => %s", response.header_size, response.headers[1].key, response.headers[1].value);
+
+    //start_server(7071);
     return 0;
 }
 

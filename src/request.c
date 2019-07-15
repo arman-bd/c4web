@@ -91,7 +91,7 @@ void process_request(http_request *http_req){
                     // Return Error: Invalid Request Method
                     printf("Error: Invalid Request Method [ 0x02 ]\n");
                     http_req->status = -1;
-                    return http_req;
+                    return;
                 }
 
                 // Process Request URI
