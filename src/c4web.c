@@ -41,20 +41,17 @@ typedef struct {
     u_buffer max_receive_buffer;
 } ip_port;
 
-typedef struct ThreadData {
-    int thread_id;
-    SOCKET mysocket;
-} ThreadData;
-
 // Include Required File
 #include "sds.c"
 #include "function.c"
 #include "request.c"
 #include "response.c"
 #include "router.c"
+#include "thread.c"
 
 // Functions
-DWORD WINAPI HandleRequest(void* data);
+DWORD WINAPI HandleRequest(void* socket);
+DWORD WINAPI HandleListening (void* socket);
 void router(http_request request);
 
 int __start_server(ip_port in) {
@@ -72,14 +69,8 @@ int __start_server(ip_port in) {
     WORD versionRequested;
     WSADATA wsaData;
     int wsaError;
-    //int bytesRecv = SOCKET_ERROR;
     SOCKET MainSocket;
-    SOCKET AcceptSocket;
-
-    // File
-    //FILE *fp;
-    //char *file_type = malloc(128);
-    //size_t file_size = 0;
+    //SOCKET AcceptSocket;
 
     // Print Application Name
     printf("::: %s v%s - %s :::\n\n", __ServerName, __ServerVersion, __ServerOS);
@@ -140,50 +131,81 @@ int __start_server(ip_port in) {
 
     printf("\n");
 
-    int req_id = 0;
+    //int req_id = 0;
     struct ThreadData tData;
 
+    // Start Thread Handler
+    CreateThread(NULL, 0, &HandleThread, NULL, 0, NULL);
+
+    // Listener Socket handler
+    tData.socket = MainSocket;
+    CreateThread(NULL, 0, &HandleListening, &tData, 0, NULL);
+
+    while(1){
+        Sleep(1000);
+        printf("\n>Active Thread: %d", THREAD_ACTIVE);
+    }
+
+    /*
     // Listen For Request
     listen_for_client:
 
-    while(1){
-        AcceptSocket = SOCKET_ERROR;
-
-        while(AcceptSocket == SOCKET_ERROR){
-            AcceptSocket = accept(MainSocket, NULL, NULL);
-        }
-
-        break;
+    AcceptSocket = SOCKET_ERROR;
+    while(AcceptSocket == SOCKET_ERROR){
+        AcceptSocket = accept(MainSocket, NULL, NULL);
+        // Rest While Low Request
+        //if(THREAD_ACTIVE == 0){Sleep(10);}
     }
 
-    tData.thread_id = req_id++;
+    tData.thread_number = req_id++;
     tData.mysocket = AcceptSocket;
     CreateThread(NULL, 0, &HandleRequest, &tData, 0, NULL);
 
     goto listen_for_client; // Repeat Process
+    */
 
-    WSACleanup();
+    //WSACleanup();
     return 0;
 }
 
+DWORD WINAPI HandleListening (void* data) {
+
+    struct ThreadData *tData = (struct ThreadData *) data;
+    struct ThreadData xData;
+
+    SOCKET AcceptSocket = SOCKET_ERROR;
+
+    while(AcceptSocket == SOCKET_ERROR){
+        AcceptSocket = accept(tData->socket, NULL, NULL);
+
+        if(AcceptSocket != SOCKET_ERROR){
+            xData.socket = AcceptSocket;
+            CreateThread(NULL, 0, &HandleRequest, &xData, 0, NULL);
+            AcceptSocket = SOCKET_ERROR;
+        }
+
+        if(THREAD_ACTIVE == 0){Sleep(10);}
+    }
+
+    return 0;
+}
+
+
 #define start_server(...) __start_server((ip_port){__VA_ARGS__});
-
-
-
 
 DWORD WINAPI HandleRequest(void* data) {
 
     struct ThreadData *tData = (struct ThreadData *) data;
 
-    printf("\nThread ID: %d", tData->thread_id);
+    // Register Thread into Thread Pool
+    RegisterThread(GetCurrentThread(), tData->socket);
+
+    printf("\n>Active Thread: %d", THREAD_ACTIVE);
 
     // Receive Data From Client
     http_request this_request;
-    this_request.socket = tData->mysocket;
+    this_request.socket = tData->socket;
     process_request(&this_request);
-
-    //this_request = process_request(this_request.socket);
-
 
     if(this_request.status == -1){
         // Error!
@@ -192,46 +214,12 @@ DWORD WINAPI HandleRequest(void* data) {
     }else{
         // Forward To Router
         router(this_request);
-
-
-        /*
-        char sample_response[1000];
-        sprintf(sample_response, "%s : %s : %s : %s", this_request.request_method, this_request.file_path, this_request.query, this_request.requested_uri);
-        send_response_header(AcceptSocket, 200, "text/html", strlen(sample_response)+10);
-
-        send_response_content(AcceptSocket, sample_response);
-        Sleep(1000);
-        send_response_content(AcceptSocket, "0\n");
-        Sleep(1000);
-        send_response_content(AcceptSocket, "1\n");
-        Sleep(1000);
-        send_response_content(AcceptSocket, "2\n");
-        Sleep(1000);
-        send_response_content(AcceptSocket, "3\n");
-        Sleep(1000);
-        send_response_content(AcceptSocket, "4\n");
-        */
-
-
-
     }
-
-    /*
-    if((fp = fopen(request_data.file_path, "rb")) != NULL){
-        // File Found, Now Get Some Information About File And Send It
-        get_mime_type(request_data.file_name, file_type); // Get MIME Type
-        file_size = getFileSize(fp); // Get File Size
-        send_response_header(AcceptSocket, 200, file_type, file_size); // Send Header
-        send_response_file(AcceptSocket, fp, file_size, server_conf.max_buffer); // Send File To Client
-        fclose(fp); // Close File
-    }else{
-        send_response_error(AcceptSocket, 404, server_conf, 0); // No Debug Print
-    }
-    */
-
-
 
     closesocket(this_request.socket); // Close Connection
+
+    // Unregister Thread from Thread Pool
+    UnregisterThread(GetCurrentThread(), this_request.socket);
 
     return 0;
 }

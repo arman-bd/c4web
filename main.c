@@ -5,12 +5,7 @@ void web_hello_world(http_request request);
 
 int main(){
 
-    http_response response = http_response_create();
-    http_response_header(&response, "Hello", "World");
-
-    //printf("%d: %s => %s", response.header_size, response.headers[1].key, response.headers[1].value);
-
-    //start_server(7071);
+    start_server(7071);
     return 0;
 }
 
@@ -22,18 +17,43 @@ void router(http_request request){
 
 void web_hello_world(http_request request){
     char sample_response[1000];
-    sprintf(sample_response, "%s : %s : %s : %s", request.request_method, request.file_path, request.query, request.requested_uri);
+    sprintf(sample_response, "<br>%s : %s : %s : %s", request.request_method, request.file_path, request.query, request.requested_uri);
     send_response_header(request, 200, "text/html", strlen(sample_response)+10);
 
     socket_send(request, sample_response);
     Sleep(1000);
-    socket_send(request, "0\n");
+    socket_send(request, "<br>0\n");
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
     Sleep(2000);
-    socket_send(request, "1\n");
+    socket_send(request, "<br>1\n");
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
     Sleep(3000);
-    socket_send(request, "2\n");
+    socket_send(request, "<br>2\n");
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
     Sleep(4000);
-    socket_send(request, "3\n");
+    socket_send(request, "<br>3\n");
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
     Sleep(5000);
-    socket_send(request, "4\n");
+    socket_send(request, "<br>4\n");
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
+    socket_send(request, sample_response);
 }

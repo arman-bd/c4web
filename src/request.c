@@ -52,6 +52,7 @@ void process_request(http_request *http_req){
 
         header_sds = sdsnew(buffer_data);
         header_token = sdssplitlen(header_sds, sdslen(header_sds), "\n", 1, &header_count);
+        sdsfree(header_sds);
 
         for (i = 0; i < header_count; i++){
 
@@ -87,6 +88,8 @@ void process_request(http_request *http_req){
                         //http_req.query[0] = '\0';
                     }
 
+                    sdsfree(query_sds);
+
                 }else{
                     // Return Error: Invalid Request Method
                     printf("Error: Invalid Request Method [ 0x02 ]\n");
@@ -106,21 +109,23 @@ void process_request(http_request *http_req){
             }
 
             sdsfreesplitres(param_token, param_count);
+            sdsfree(param_sds);
         }
 
         // Free SDS
-        sdsfree(header_sds);
-        sdsfree(param_sds);
-        sdsfree(query_sds);
+
+
+
         free(buffer_data);
 
         // Display Info About Requested File
-
+        /*
         printf("\n------------------------------------------\n");
         printf("> Requested Method: %s\n", http_req->request_method);
         printf("> Requested File: %s\n", http_req->file_path);
         printf("> Requested Query: %s\n", http_req->query);
         printf("> Requested URI: %s\n\n", http_req->requested_uri);
+        */
     }
 
 

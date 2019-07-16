@@ -1,9 +1,9 @@
 # depslib dependency file v1.0
-1563209489 source:d:\github\c4web\main.c
+1563306125 source:d:\github\c4web\main.c
 	<stdio.h>
 	"src/c4web.c"
 
-1563137675 d:\github\c4web\src\c4web.c
+1563310237 d:\github\c4web\src\c4web.c
 	<io.h>
 	<stdio.h>
 	<string.h>
@@ -18,6 +18,7 @@
 	"request.c"
 	"response.c"
 	"router.c"
+	"thread.c"
 
 1562896524 d:\github\c4web\src\sds.c
 	<stdio.h>
@@ -35,9 +36,11 @@
 
 1563122108 d:\github\c4web\src\function.c
 
-1563208930 d:\github\c4web\src\request.c
+1563298458 d:\github\c4web\src\request.c
 
-1563209569 d:\github\c4web\src\response.c
+1563299206 d:\github\c4web\src\response.c
 
 1563136152 d:\github\c4web\src\router.c
+
+1563310993 d:\github\c4web\src\thread.c
 
