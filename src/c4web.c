@@ -18,6 +18,7 @@ char __ServerOS[32] = "Win32";
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include<assert.h>
 #include<time.h>
 #include<sys/stat.h>
 #include<sys/types.h>
@@ -25,6 +26,10 @@ char __ServerOS[32] = "Win32";
 // Windows Library
 #include<windows.h>
 #include<winsock2.h>
+
+// Include Libraries
+#include "sds-2.0.0/sds.c"
+#include "zlib-1.2.3/zlib.h"
 
 typedef unsigned long long u_buffer;
 u_buffer max_send_buffer;
@@ -42,8 +47,10 @@ typedef struct {
 } ip_port;
 
 // Include Required File
-#include "sds.c"
+#include "http.h"
+
 #include "function.c"
+#include "compress.c"
 #include "request.c"
 #include "response.c"
 #include "router.c"
@@ -53,6 +60,8 @@ typedef struct {
 DWORD WINAPI HandleRequest(void* socket);
 DWORD WINAPI HandleListening (void* socket);
 void router(http_request request);
+int __start_server(ip_port in);
+#define start_server(...) __start_server((ip_port){__VA_ARGS__});
 
 int __start_server(ip_port in) {
     // IP : Port
@@ -143,26 +152,8 @@ int __start_server(ip_port in) {
 
     while(1){
         Sleep(1000);
-        printf("\n>Active Thread: %d", THREAD_ACTIVE);
+        //printf("\n>Active Thread: %d", THREAD_ACTIVE);
     }
-
-    /*
-    // Listen For Request
-    listen_for_client:
-
-    AcceptSocket = SOCKET_ERROR;
-    while(AcceptSocket == SOCKET_ERROR){
-        AcceptSocket = accept(MainSocket, NULL, NULL);
-        // Rest While Low Request
-        //if(THREAD_ACTIVE == 0){Sleep(10);}
-    }
-
-    tData.thread_number = req_id++;
-    tData.mysocket = AcceptSocket;
-    CreateThread(NULL, 0, &HandleRequest, &tData, 0, NULL);
-
-    goto listen_for_client; // Repeat Process
-    */
 
     //WSACleanup();
     return 0;
@@ -191,7 +182,7 @@ DWORD WINAPI HandleListening (void* data) {
 }
 
 
-#define start_server(...) __start_server((ip_port){__VA_ARGS__});
+
 
 DWORD WINAPI HandleRequest(void* data) {
 
@@ -200,11 +191,13 @@ DWORD WINAPI HandleRequest(void* data) {
     // Register Thread into Thread Pool
     RegisterThread(GetCurrentThread(), tData->socket);
 
-    printf("\n>Active Thread: %d", THREAD_ACTIVE);
+    //printf("\n>Active Thread: %d", THREAD_ACTIVE);
 
     // Receive Data From Client
-    http_request this_request;
+    struct http_request this_request;
     this_request.socket = tData->socket;
+    http_response_create(&this_request);
+
     process_request(&this_request);
 
     if(this_request.status == -1){

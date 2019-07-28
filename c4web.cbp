@@ -16,7 +16,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="pthread" />
-					<Add library="WSock32" />
+					<Add library="wsock32" />
 				</Linker>
 			</Target>
 			<Target title="Release">
@@ -29,8 +29,8 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
-					<Add library="WSock32" />
 					<Add library="pthread" />
+					<Add library="wsock32" />
 				</Linker>
 			</Target>
 		</Build>

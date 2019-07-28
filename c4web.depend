@@ -1,20 +1,24 @@
 # depslib dependency file v1.0
-1563306125 source:d:\github\c4web\main.c
+1564352536 source:d:\github\c4web\main.c
 	<stdio.h>
 	"src/c4web.c"
 
-1563310237 d:\github\c4web\src\c4web.c
+1564349480 d:\github\c4web\src\c4web.c
 	<io.h>
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
+	<assert.h>
 	<time.h>
 	<sys/stat.h>
 	<sys/types.h>
 	<windows.h>
 	<winsock2.h>
-	"sds.c"
+	"sds-2.0.0/sds.c"
+	"zlib-1.2.3/zlib.h"
+	"http.h"
 	"function.c"
+	"compress.c"
 	"request.c"
 	"response.c"
 	"router.c"
@@ -36,11 +40,83 @@
 
 1563122108 d:\github\c4web\src\function.c
 
-1563298458 d:\github\c4web\src\request.c
+1564343928 d:\github\c4web\src\request.c
 
-1563299206 d:\github\c4web\src\response.c
+1564353045 d:\github\c4web\src\response.c
 
 1563136152 d:\github\c4web\src\router.c
 
 1563310993 d:\github\c4web\src\thread.c
+
+1562896524 d:\github\c4web\src\sds\sds.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<assert.h>
+	<limits.h>
+	<sys/types.h>
+	<stdarg.h>
+	<stdint.h>
+	<stdio.h>
+	"testhelp.h"
+	"limits.h"
+
+1564253475 d:\github\c4web\src\miniz\miniz.h
+	<stddef.h>
+	<time.h>
+	<assert.h>
+	<stdint.h>
+	<stdlib.h>
+	<string.h>
+	<stdio.h>
+
+1437838731 d:\github\c4web\src\sds-2.0.0\sds.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<assert.h>
+	"sds.h"
+	"sdsalloc.h"
+	<stdio.h>
+	"testhelp.h"
+	"limits.h"
+
+1437838731 d:\github\c4web\src\sds-2.0.0\sds.h
+	<sys/types.h>
+	<stdarg.h>
+	<stdint.h>
+
+1437838731 d:\github\c4web\src\sds-2.0.0\sdsalloc.h
+
+1437838731 d:\github\c4web\src\sds-2.0.0\testhelp.h
+
+1564314854 d:\github\c4web\src\zlib-1.2.11\zlib.h
+	"zconf.h"
+
+1564314854 d:\github\c4web\src\zlib-1.2.11\zconf.h
+	<stddef.h>
+	<windows.h>
+	<limits.h>
+	<sys/types.h>
+	<stdarg.h>
+	<stddef.h>
+	<unistd.h>
+	<unixio.h>
+
+1564344088 d:\github\c4web\src\compress.c
+	<fcntl.h>
+	<io.h>
+
+1121653609 d:\github\c4web\src\zlib-1.2.3\zlib.h
+	"zconf.h"
+
+1121874026 d:\github\c4web\src\zlib-1.2.3\zconf.h
+	<windows.h>
+	<sys/types.h>
+	<unistd.h>
+	<unixio.h>
+
+1564350033 d:\github\c4web\src\http.h
 
