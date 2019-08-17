@@ -17,7 +17,6 @@ void hello_world(http_request request);
 void custom_header(http_request request);
 
 int main(){
-    test_compress();
     start_server(7071);
     return 0;
 }
