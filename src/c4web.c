@@ -73,6 +73,9 @@ char __ServerVersion[16] = "0.1.2";
 
 #endif
 
+#define COMPRESSED 1
+#define UNCOMPRESSED 0
+
 // Include Libraries
 #include "sds-2.0.0/sds.c"
 #include "zlib-1.2.3/zlib.h"
