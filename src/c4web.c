@@ -77,8 +77,8 @@ char __ServerVersion[16] = "0.1.2";
 #define UNCOMPRESSED 0
 
 // Include Libraries
-#include "sds-2.0.0/sds.c"
-#include "zlib-1.2.3/zlib.h"
+#include "lib/sds-2.0.0/sds.c"
+#include "lib/zlib-1.2.3/zlib.h"
 
 // Include Required File
 #include "http.h"

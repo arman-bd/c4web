@@ -53,3 +53,10 @@ dkms.conf
 
 # Binary Directory
 bin/*
+obj/*
+
+
+# CodeBlocks
+*.cbp
+*.depend
+*.layout
