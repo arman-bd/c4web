@@ -1,5 +1,5 @@
 /*
-Project: Khudro Web-Server
+Project: C4Web Framework
 
 By: Arman Hossain
 CSE 11'th Batch,
@@ -7,10 +7,11 @@ Shanto-Mariam University of Creative Technology
 Dhaka, Bangladesh
 
 GitHub: https://github.com/arman-bd/c4web
+Portfolio: https://arman-bd.github.com/
 */
 
-char __ServerName[128] = "Khudro";
-char __ServerVersion[16] = "1.0.1";
+char __ServerName[128] = "C4Web";
+char __ServerVersion[16] = "0.1.2";
 
 // Include Required Headers
 #include<stdio.h>
@@ -197,9 +198,6 @@ int __start_server(ip_port in) {
     ip = in.ip ? in.ip : "127.0.0.1";
     max_send_buffer = in.max_send_buffer ? in.max_send_buffer : 10240;
     max_receive_buffer = in.max_receive_buffer ? in.max_receive_buffer : 10240;
-
-
-    printf("%s:%d\n\n", ip, port);
 
     // Socket
     SOCKET MainSocket;

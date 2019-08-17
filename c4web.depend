@@ -1,9 +1,8 @@
 # depslib dependency file v1.0
-1566069915 source:/media/someone/Common1/GitHub/c4web/main.c
-	<stdio.h>
+1566074084 source:/media/someone/Common1/GitHub/c4web/main.c
 	"src/c4web.c"
 
-1566068633 /media/someone/Common1/GitHub/c4web/src/c4web.c
+1566074075 /media/someone/Common1/GitHub/c4web/src/c4web.c
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
