@@ -16,16 +16,26 @@ void http_response_create(http_request *request){
     request->response = response;
 }
 
+char* http_response_header_get(http_request *request, char *key){
+    int i = 0;
+    int j = request->response.header_size;
 
-void http_response_header(http_request *request, char *key, char *value){
+    for(i = 0; i < j; i++){
+        if(strcmp(strtolower(request->response.headers[i].key), strtolower(key)) == 0){
+            return request->response.headers[i].value;
+        }
+    }
+
+    return "";
+}
+
+void http_response_header_set(http_request *request, char *key, char *value){
     int i = 0;
     int j = request->response.header_size;
     int found = 0;
 
-    //printf("\n***HS_HRD %d ***\n", request->response.header_size);
-
     for(i = 0; i < j; i++){
-        if(strcmp(request->response.headers[i].key, key) == 0){
+        if(strcmp(strtolower(request->response.headers[i].key), strtolower(key)) == 0){
             request->response.headers[i].value = malloc(sizeof(char) * (strlen(value) + 1));
             request->response.headers[i].value = value;
             found = 1;
@@ -49,8 +59,6 @@ void http_response_header(http_request *request, char *key, char *value){
 
 int http_header_send(http_request request){
 
-    printf("\n>X 1 X<\n");
-
     if(request.response.header_sent == 1){
         // Error: Header Already Sent
         return -1;
@@ -61,10 +69,10 @@ int http_header_send(http_request request){
     int headerSize = 128; // Basic
     char *header;
 
-    printf("\n>X 2 X<\n");
-
     for(i = 0; i < j; i++){
-        headerSize += strlen(request.response.headers[i].key) + strlen(request.response.headers[i].value) + 3; // 2 byte for [: ] + 1 byte for \n
+        if(strlen(request.response.headers[i].value) > 0){
+            headerSize += strlen(request.response.headers[i].key) + strlen(request.response.headers[i].value) + 3; // 2 byte for [: ] + 1 byte for \n
+        }
     }
 
     header = malloc(headerSize * sizeof(char));
@@ -77,7 +85,9 @@ int http_header_send(http_request request){
 
     // Add Header Fields
     for(i = 0; i < j; i++){
-        sprintf(header, "%s%s: %s\n", header, request.response.headers[i].key, request.response.headers[i].value);
+        if(strlen(request.response.headers[i].value) > 0){
+            sprintf(header, "%s%s: %s\n", header, request.response.headers[i].key, request.response.headers[i].value);
+        }
     }
 
     // Add Trailing New Line
@@ -95,10 +105,10 @@ int http_header_send(http_request request){
 }
 
 
-int file_send_compressed(FILE *source, SOCKET socket, int level)
+int file_send_compressed(FILE *source, SOCKET socket_id, int level)
 {
     int ret, flush;
-    unsigned have;
+    size_t have;
     z_stream strm;
     unsigned char in[CHUNK];
     unsigned char out[CHUNK];
@@ -108,8 +118,10 @@ int file_send_compressed(FILE *source, SOCKET socket, int level)
     strm.zfree = Z_NULL;
     strm.opaque = Z_NULL;
     ret = deflateInit(&strm, level);
-    if (ret != Z_OK)
+
+    if (ret != Z_OK){
         return ret;
+    }
 
     /* compress until end of file */
     do {
@@ -118,19 +130,22 @@ int file_send_compressed(FILE *source, SOCKET socket, int level)
             (void)deflateEnd(&strm);
             return Z_ERRNO;
         }
+
         flush = feof(source) ? Z_FINISH : Z_NO_FLUSH;
         strm.next_in = in;
 
         /* run deflate() on input until output buffer not full, finish
            compression if all of source has been read in */
         do {
+
             strm.avail_out = CHUNK;
             strm.next_out = out;
             ret = deflate(&strm, flush);    /* no bad return value */
             assert(ret != Z_STREAM_ERROR);  /* state not clobbered */
             have = CHUNK - strm.avail_out;
             // Send to Socket
-            if (send(socket, (char*)out, have, 0) == -1) {
+
+            if (send(socket_id, (char*)out, have, 0) == -1) {
                 (void)deflateEnd(&strm);
                 return Z_ERRNO;
             }
@@ -148,17 +163,19 @@ int file_send_compressed(FILE *source, SOCKET socket, int level)
     return Z_OK;
 }
 
-long file_send_uncompressed(FILE *fp, SOCKET socket){
-    size_t file_size;
-    long byteSent = 0;
+long file_send_uncompressed(FILE *fp, SOCKET socket_id){
+    size_t file_size, file_t;
+    size_t byteSent = 0;
     char *file_buff;
 
     file_size = getFileSize(fp);
 
     if(max_send_buffer == 0 || max_send_buffer > file_size){
         file_buff = malloc(file_size + 1);
-        fread(file_buff, sizeof(char), file_size + 1, fp);
-        byteSent = send(socket, file_buff, file_size, 0);
+        file_t = fread(file_buff, sizeof(char), file_size + 1, fp);
+        if(file_t > 0){
+            byteSent = send(socket_id, file_buff, file_size, 0);
+        }
     }else{
         size_t c_position = 0;
         file_buff = malloc(max_send_buffer + 1);
@@ -167,18 +184,22 @@ long file_send_uncompressed(FILE *fp, SOCKET socket){
 
         while(c_position + max_send_buffer <= file_size){
             fseek(fp, c_position, SEEK_SET);
-            fread(file_buff, sizeof(char), max_send_buffer + 1, fp);
-            byteSent += send(socket, file_buff, max_send_buffer, 0);
-            c_position = c_position + max_send_buffer;
+            file_t = fread(file_buff, sizeof(char), max_send_buffer + 1, fp);
+            if(file_t > 0){
+                byteSent += send(socket_id, file_buff, max_send_buffer, 0);
+                c_position = c_position + max_send_buffer;
+            }
         }
         size_t left_buffer = file_size - c_position;
         if(left_buffer > 0){
             fseek(fp, c_position, SEEK_SET);
-            fread(file_buff, sizeof(char), left_buffer + 1, fp);
+            file_t = fread(file_buff, sizeof(char), left_buffer + 1, fp);
             if(left_buffer < max_send_buffer){
                 file_buff[left_buffer] = '\0';
             }
-            byteSent += send(socket, file_buff, left_buffer, 0);
+            if(file_t > 0){
+                byteSent += send(socket_id, file_buff, left_buffer, 0);
+            }
         }
     }
 
@@ -188,34 +209,55 @@ long file_send_uncompressed(FILE *fp, SOCKET socket){
 }
 
 
-int send_file(http_request request, char *file_path, int compression){
+int http_send_file(http_request request, char *file_path, int compression){
     FILE *fp;
-    fp = fopen(file_path, "rb");
-    if(compression == 1){
-        http_response_header(&request, "Content-Encoding", "deflate");
+
+    // Check if file exists
+    if(access(file_path, F_OK) != -1){
+        // file exists
+        fp = fopen(file_path, "rb");
+
+        if(compression == 1){
+            http_response_header_set(&request, "Content-Encoding", "deflate");
+        }
+
+        if(request.response.header_sent == 0){
+            http_header_send(request);
+            //sleep_ms(100);
+        }
+
+        if(compression == 1){
+            file_send_compressed(fp, request.socket, Z_DEFAULT_COMPRESSION);
+        }else{
+            file_send_uncompressed(fp, request.socket);
+        }
+
+        printf("\n> File Served [ %s ]\n", file_path);
+    } else {
+        // file doesn't exist
+        printf("\n> Requested File Does Not Exists! [ %s ]\n", file_path);
     }
-
-    if(request.response.header_sent == 0){
-        http_header_send(request);
-        Sleep(100);
-    }
-
-    if(compression == 1){
-        file_send_compressed(fp, request.socket, Z_DEFAULT_COMPRESSION);
-    }else{
-        file_send_uncompressed(fp, request.socket);
-    }
-
-
 
     return 0;
 }
 
+int http_send_text(http_request request, char *text){
+    size_t byteSent = 0;
 
+    if(request.response.header_sent == 0){
+        if(strcmp(http_response_header_get(&request, "Content-Type"), "") == 0){
+            http_response_header_set(&request, "Content-Type", "text/html");
+        }
+        http_header_send(request);
+    }
 
+    printf("\n%s\n\n", text);
+    // Send Single Part!
+    // Must Implement Multipart for Larger Data Pack!
+    byteSent = send(request.socket, text, strlen(text), 0);
 
-
-
+    return byteSent;
+}
 
 /*
 int send_response_header(http_request request, int response, char *c_type){

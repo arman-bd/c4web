@@ -1,4 +1,17 @@
 
+void sleep_ms(int milliseconds) // cross-platform sleep function
+{
+#ifdef WIN32
+    Sleep(milliseconds);
+#elif _POSIX_C_SOURCE >= 199309L
+    struct timespec ts;
+    ts.tv_sec = milliseconds / 1000;
+    ts.tv_nsec = (milliseconds % 1000) * 1000000;
+    nanosleep(&ts, NULL);
+#else
+    usleep(milliseconds * 1000);
+#endif
+}
 
 size_t getFileSize(FILE *fp){
     size_t file_size = 0;
@@ -8,6 +21,36 @@ size_t getFileSize(FILE *fp){
     file_size = ftell(fp);
     fseek(fp, 0L, SEEK_SET);
     return file_size;
+}
+
+char* strtolower(char* text){
+    int i = 0, j = strlen(text);
+    char* buffer;
+    buffer = malloc(j+1);
+
+    for(i = 0; i <= j; i++){
+        if(text[i] > 64 && text[i] < 91){
+            buffer[i] = text[i] + 32;
+        }else{
+            buffer[i] = text[i];
+        }
+    }
+    return buffer;
+}
+
+char* strtoupper(char* text){
+    int i = 0, j = strlen(text);
+    char* buffer;
+    buffer = malloc(j+1);
+
+    for(i = 0; i <= j; i++){
+        if(text[i] > 96 && text[i] < 122){
+            buffer[i] = text[i] - 32;
+        }else{
+            buffer[i] = text[i];
+        }
+    }
+    return buffer;
 }
 
 /*

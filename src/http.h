@@ -1,3 +1,18 @@
+typedef unsigned long long u_buffer;
+u_buffer max_send_buffer;
+u_buffer max_receive_buffer;
+int port;
+char *dir;
+char *ip;
+
+typedef struct {
+    int port;
+    char *dir;
+    char *ip;
+    u_buffer max_send_buffer;
+    u_buffer max_receive_buffer;
+} ip_port;
+
 typedef struct http_headers {
     char *key;
     char *value;

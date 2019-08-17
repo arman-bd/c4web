@@ -1,10 +1,9 @@
 # depslib dependency file v1.0
-1564352536 source:d:\github\c4web\main.c
+1566069915 source:/media/someone/Common1/GitHub/c4web/main.c
 	<stdio.h>
 	"src/c4web.c"
 
-1564349480 d:\github\c4web\src\c4web.c
-	<io.h>
+1566068633 /media/someone/Common1/GitHub/c4web/src/c4web.c
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -12,8 +11,18 @@
 	<time.h>
 	<sys/stat.h>
 	<sys/types.h>
+	<error.h>
+	<io.h>
 	<windows.h>
 	<winsock2.h>
+	<unistd.h>
+	<resolv.h>
+	<pthread.h>
+	<fcntl.h>
+	<arpa/inet.h>
+	<netinet/in.h>
+	<sys/socket.h>
+	<sys/wait.h>
 	"sds-2.0.0/sds.c"
 	"zlib-1.2.3/zlib.h"
 	"http.h"
@@ -24,54 +33,7 @@
 	"router.c"
 	"thread.c"
 
-1562896524 d:\github\c4web\src\sds.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<ctype.h>
-	<assert.h>
-	<limits.h>
-	<sys/types.h>
-	<stdarg.h>
-	<stdint.h>
-	<stdio.h>
-	"testhelp.h"
-	"limits.h"
-
-1563122108 d:\github\c4web\src\function.c
-
-1564343928 d:\github\c4web\src\request.c
-
-1564353045 d:\github\c4web\src\response.c
-
-1563136152 d:\github\c4web\src\router.c
-
-1563310993 d:\github\c4web\src\thread.c
-
-1562896524 d:\github\c4web\src\sds\sds.c
-	<stdio.h>
-	<stdlib.h>
-	<string.h>
-	<ctype.h>
-	<assert.h>
-	<limits.h>
-	<sys/types.h>
-	<stdarg.h>
-	<stdint.h>
-	<stdio.h>
-	"testhelp.h"
-	"limits.h"
-
-1564253475 d:\github\c4web\src\miniz\miniz.h
-	<stddef.h>
-	<time.h>
-	<assert.h>
-	<stdint.h>
-	<stdlib.h>
-	<string.h>
-	<stdio.h>
-
-1437838731 d:\github\c4web\src\sds-2.0.0\sds.c
+1565971748 /media/someone/Common1/GitHub/c4web/src/sds-2.0.0/sds.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -83,40 +45,37 @@
 	"testhelp.h"
 	"limits.h"
 
-1437838731 d:\github\c4web\src\sds-2.0.0\sds.h
+1565971748 /media/someone/Common1/GitHub/c4web/src/sds-2.0.0/sds.h
 	<sys/types.h>
 	<stdarg.h>
 	<stdint.h>
 
-1437838731 d:\github\c4web\src\sds-2.0.0\sdsalloc.h
+1565971748 /media/someone/Common1/GitHub/c4web/src/sds-2.0.0/sdsalloc.h
 
-1437838731 d:\github\c4web\src\sds-2.0.0\testhelp.h
+1565971748 /media/someone/Common1/GitHub/c4web/src/sds-2.0.0/testhelp.h
 
-1564314854 d:\github\c4web\src\zlib-1.2.11\zlib.h
+1565971748 /media/someone/Common1/GitHub/c4web/src/zlib-1.2.3/zlib.h
 	"zconf.h"
 
-1564314854 d:\github\c4web\src\zlib-1.2.11\zconf.h
-	<stddef.h>
+1565971748 /media/someone/Common1/GitHub/c4web/src/zlib-1.2.3/zconf.h
 	<windows.h>
-	<limits.h>
 	<sys/types.h>
-	<stdarg.h>
-	<stddef.h>
 	<unistd.h>
 	<unixio.h>
 
-1564344088 d:\github\c4web\src\compress.c
+1565981860 /media/someone/Common1/GitHub/c4web/src/http.h
+
+1566071422 /media/someone/Common1/GitHub/c4web/src/function.c
+
+1565971748 /media/someone/Common1/GitHub/c4web/src/compress.c
 	<fcntl.h>
 	<io.h>
 
-1121653609 d:\github\c4web\src\zlib-1.2.3\zlib.h
-	"zconf.h"
+1565971748 /media/someone/Common1/GitHub/c4web/src/request.c
 
-1121874026 d:\github\c4web\src\zlib-1.2.3\zconf.h
-	<windows.h>
-	<sys/types.h>
-	<unistd.h>
-	<unixio.h>
+1566071592 /media/someone/Common1/GitHub/c4web/src/response.c
 
-1564350033 d:\github\c4web\src\http.h
+1565971748 /media/someone/Common1/GitHub/c4web/src/router.c
+
+1566067703 /media/someone/Common1/GitHub/c4web/src/thread.c
 

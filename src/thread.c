@@ -3,7 +3,7 @@ typedef struct ThreadData {
 } ThreadData;
 
 typedef struct ThreadPool {
-    HANDLE thread_id;
+    THREAD_T thread_id;
     SOCKET socket_id;
     int status; // [ 1 = Open, 0 = Closed ]
     int timer;
@@ -15,11 +15,18 @@ typedef struct ThreadPool {
 ThreadPool TP[MAX_THREAD];
 static int THREAD_ACTIVE = 0;
 
-int RegisterThread(HANDLE thread_id, SOCKET socket_id){
+DWORD OSAPI HandleThread();
+int UnregisterThread(THREAD_T thread_id, SOCKET socket_id);
+int RegisterThread(THREAD_T thread_id, SOCKET socket_id);
+
+
+
+
+int RegisterThread(THREAD_T thread_id, SOCKET socket_id){
     int i;
 
     for(i = 0; i < MAX_THREAD; i++){
-        if(TP[i].thread_id == (HANDLE)-1){
+        if(TP[i].thread_id == (THREAD_T)-1){
             TP[i].thread_id = thread_id;
             TP[i].socket_id = socket_id;
             TP[i].status = 1;
@@ -32,12 +39,12 @@ int RegisterThread(HANDLE thread_id, SOCKET socket_id){
     return 0;
 }
 
-int UnregisterThread(HANDLE thread_id, SOCKET socket_id){
+int UnregisterThread(THREAD_T thread_id, SOCKET socket_id){
     int i;
 
     for(i = 0; i < MAX_THREAD; i++){
         if(TP[i].thread_id == thread_id){
-            TP[i].thread_id = (HANDLE)-1;
+            TP[i].thread_id = (THREAD_T)-1;
             TP[i].socket_id = (SOCKET)-1;
             TP[i].status = -1;
             TP[i].timer = -1;
@@ -49,12 +56,12 @@ int UnregisterThread(HANDLE thread_id, SOCKET socket_id){
     return 0;
 }
 
-DWORD WINAPI HandleThread() {
+DWORD OSAPI HandleThread() {
     int i, isZero = 0;
 
     // Initialize Thread Pool
     for(i = 0; i < MAX_THREAD; i++){
-        TP[i].thread_id = (HANDLE)-1;
+        TP[i].thread_id = (THREAD_T)-1;
         TP[i].socket_id = (SOCKET)-1;
         TP[i].status = -1;
         TP[i].timer = -1;
@@ -68,15 +75,18 @@ DWORD WINAPI HandleThread() {
                 if(TP[i].timer > 0){
                     isZero = 1;
                     TP[i].timer--;
-                }else{
+                }else if(TP[i].status != -1){
                     printf("\n>Thread Timeout: %d", (int)TP[i].thread_id);
                     // Kill Thread
                     closesocket(TP[i].socket_id);
+ #if defined(MSDOS) || defined(WIN32) || defined(__CYGWIN__)
                     TerminateThread(TP[i].thread_id, 0);
-                    CloseHandle((HANDLE)TP[i].thread_id);
-
+                    CloseHandle((THREAD_T)TP[i].thread_id);
+#else
+                    pthread_cancel(TP[i].thread_id);
+#endif
                     // Invalidate
-                    TP[i].thread_id = (HANDLE)-1;
+                    TP[i].thread_id = (THREAD_T)-1;
                     TP[i].socket_id = (SOCKET)-1;
                     TP[i].status = -1;
                     TP[i].timer = -1;
@@ -88,9 +98,9 @@ DWORD WINAPI HandleThread() {
             // Fixing Thread Count: Lost Due To OS Intervention
             if(isZero == 0){THREAD_ACTIVE = 0;}
 
-            Sleep(1);
+            sleep_ms(1);
         }else{
-            Sleep(10);
+            sleep_ms(10);
         }
     }
 }
