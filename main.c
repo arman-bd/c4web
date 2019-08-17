@@ -9,7 +9,26 @@ Dhaka, Bangladesh
 GitHub: https://github.com/arman-bd/c4web
 Portfolio: https://arman-bd.github.com/
 */
+#include "src/c4web.c"
+void hello_world(http_request request);
 
+int main(){
+    start_server(7071);
+    return 0;
+}
+
+void router(http_request request){
+    if(router_match(request, "hello-world")){
+        hello_world(request);
+    }
+}
+
+void hello_world(http_request request){
+    char sample_response[12] = "Hello World";
+    http_send_text(request, sample_response);
+}
+
+/*
 #include "src/c4web.c"
 
 void web_index(http_request request);
@@ -40,7 +59,7 @@ void hello_world(http_request request){
     char sample_response[32] = "Hello World";
     http_send_text(request, sample_response);
 }
-
+*/
 /*
 void test_file(http_request request){
     http_response_header_set(&request, "Content-Type", "text/*");

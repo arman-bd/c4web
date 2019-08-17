@@ -29,6 +29,9 @@ void hello_world(http_request request){
 }
 ```
 
+At this moment, the executable produced in this "hello world" project is roughly ~40 KB ( on Unix ).
+Yes, this ~40 KB executable contains the features mentioned below.
+
 ## Features
 
 * Multi Threaded
