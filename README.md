@@ -2,11 +2,11 @@
 
 C for Web is a simple framework for developing Web Applications using C.
 
-`
+```
 Note: Project is at initial development phase, 
 code / methods might change without notice.
 Please use with caution!
-`
+```
 
 <img src="https://i.imgur.com/vIi6GHU.png" width="500" />
 
