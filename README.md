@@ -4,9 +4,9 @@ C for Web is a simple framework for developing Web Applications using C.
 
 ## Note: This project is currently under basic development phase.
 
-![C4Web Framework](https://i.imgur.com/vIi6GHU.png "C4Web Framework")
+![C4Web Framework](https://i.imgur.com/vIi6GHU.png "C4Web Framework" | width=400)
 
-##1. Overview
+## 1. Overview
 
 * Multi Threaded
 * Very Low Dependency
@@ -16,9 +16,9 @@ C for Web is a simple framework for developing Web Applications using C.
 * Custom Header
 * Works on both Unix and Windows
 
-##2. Usage
+## 2. Usage
 
-###2.1. Generating Project
+### 2.1. Generating Project
 
 First download or clone this repository in your development environment.
 Use `cmake` to generate project on your preffered IDE.
@@ -35,7 +35,7 @@ cmake -G"CodeBlocks - Unix Makefiles" ..
 For other IDE please refer to this [guide](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html).
 Alternatively you can refer to this [Issue Page](https://github.com/district10/cmake-templates/issues/2#issue-154178247).
 
-###2.2. Generating Builds
+### 2.2. Generating Builds
 
 If you want to skip generating project files,
 you may use `cmake` to generate build files.
@@ -65,9 +65,9 @@ make clean
 make
 ```
 
-##3. Examples
+## 3. Examples
 
-###3.1. Hello World
+### 3.1. Hello World
 
 ```C
 #include "framework/c4web.h"
