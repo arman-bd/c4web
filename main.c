@@ -10,7 +10,7 @@ GitHub: https://github.com/arman-bd/c4web
 Portfolio: https://arman-bd.github.com/
 */
 
-#include "src/c4web.c"
+#include "framework/c4web.h"
 
 void web_index(http_request request);
 void hello_world(http_request request);
