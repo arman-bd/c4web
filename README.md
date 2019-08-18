@@ -105,7 +105,7 @@ void hello_world(http_request request){
 
 ## Copyright
 
-* C4Web is licensed under the GNU General Public License v3.0
+    C4Web is licensed under the GNU General Public License v3.0
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -120,4 +120,4 @@ void hello_world(http_request request){
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
     
-Copyright © 2019 Arman Hossain
+    Copyright © 2019 Arman Hossain
