@@ -4,7 +4,7 @@ C for Web is a simple framework for developing Web Applications using C.
 
 ## Note: This project is currently under basic development phase.
 
-![C4Web Framework](https://i.imgur.com/vIi6GHU.png "C4Web Framework" | width=400)
+<img src="https://i.imgur.com/vIi6GHU.png" width="450" />
 
 ## 1. Overview
 
